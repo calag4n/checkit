@@ -14,23 +14,20 @@ module.exports = {
         lang: 'fr'
       }
     },
-    // {
-    //   resolve: "gatsby-theme-firebase",
-    //   options: {
-    //     credentials: {
-    //       apiKey: process.env.FIREBASE_API_KEY,
-    //       authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-    //       databaseURL: process.env.FIREBASE_DATABASE_URL,
-    //       projectId: process.env.FIREBASE_PROJECT_ID,
-    //       storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-    //       messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
-    //       appId: process.env.FIREBASE_APP_ID,
-    //     },
-    //     // loginPath: "/login",
-    //     loginRedirectPath: "/home",
-    //     socialLogins: ["google"],
-    //   },
-    // },
+    {
+      resolve: "gatsby-plugin-firebase",
+      options: {
+        credentials: {
+          apiKey: "AIzaSyCFIuE2-ljTvqC65uwDALHibAEwXeuXuho",
+          authDomain: "checkit-1a1c5.firebaseapp.com",
+          databaseURL: "https://checkit-1a1c5.firebaseio.com",
+          projectId: "checkit-1a1c5",
+          storageBucket: "checkit-1a1c5.appspot.com",
+          messagingSenderId: "126717325093",
+          appId: "1:126717325093:web:9e5056206355dad2d9b4cc",
+        }
+      }
+    }
 
     `gatsby-plugin-react-helmet`,
     {

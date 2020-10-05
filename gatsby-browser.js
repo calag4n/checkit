@@ -1,5 +1,7 @@
 import { element } from "prop-types"
 import React from "react"
+import "firebase/auth"
+import "firebase/firestore"
 
 import {FirebaseProvider} from './src/contexts/firebaseContext'
 

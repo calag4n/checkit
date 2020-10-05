@@ -1,12 +1,14 @@
 import React from "react"
 import PropTypes from "prop-types"
+import { Helmet } from "react-helmet"
 import { useStaticQuery, graphql } from "gatsby"
 import styled, { ThemeProvider } from "styled-components"
+
 import { theme, GlobalStyle } from "../theme"
 import Header from "./header"
 import "./layout.css"
 
-const Layout = ({ children }) => {
+const Layout = ({ children, page }) => {
   const data = useStaticQuery(graphql`
     query SiteTitleQuery {
       site {
@@ -19,35 +21,20 @@ const Layout = ({ children }) => {
 
   return (
     <>
-      <Header siteTitle={data.site.siteMetadata?.title || `Title`} />
-      <div
-        style={{
-          margin: `0 auto`,
-          maxWidth: 960,
-          padding: `0 1.0875rem 1.45rem`,
-        }}
-      >
-        <main>{children}</main>
-        <footer
-          style={{
-            marginTop: `2rem`,
-          }}
-        >
-          © {new Date().getFullYear()}, Built with
-          {` `}
-          <a href="https://www.gatsbyjs.com">Gatsby</a>
-        </footer>
-        <Test>Helo</Test>
-      </div>
+      <Header siteTitle={data.site.siteMetadata?.title || `Title`} page={page}/>
+      <Container>
+        {children}
+      </Container>
     </>
   )
 }
 
 Layout.propTypes = {
   children: PropTypes.node.isRequired,
+  page: PropTypes.string,
 }
 
-const LayoutContainer = (...props) => {
+const LayoutContainer = (props) => {
   return (
     <ThemeProvider theme={theme}>
       <Layout {...props}></Layout>
@@ -58,8 +45,10 @@ const LayoutContainer = (...props) => {
 
 export default LayoutContainer
 
+const Container = styled.main`
+  height: 92vh;
+  margin: 0 auto;
+  max-width: 960;
+  padding: 1.25rem 1.0875rem 1.25rem;
+`;
 
-const Test = styled.div`
-  color: ${props => props.theme.colors.danger};
-
-`

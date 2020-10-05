@@ -1,11 +1,11 @@
 import React from "react"
 import PropTypes from "prop-types"
 import styled from "styled-components"
-import { auth } from "gatsby-theme-firebase";
 
-const SettingsIcon = ({ active }) => {
+
+const SettingsIcon = ({ active, ...props  }) => {
   return (
-    <Wrapper onClick={() => auth.signOut()}>
+    <Wrapper {...props}>
       <svg
         aria-hidden="true"
         focusable="false"

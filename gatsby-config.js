@@ -27,7 +27,7 @@ module.exports = {
           appId: "1:126717325093:web:9e5056206355dad2d9b4cc",
         }
       }
-    }
+    },
 
     `gatsby-plugin-react-helmet`,
     {

@@ -1,6 +1,6 @@
-import app from 'gatsby-plugin-firebase/app'
-import 'gatsby-plugin-firebase/auth'
-import 'gatsby-plugin-firebase/firestore'
+import app from 'firebase/app'
+import 'firebase/auth'
+import 'firebase/firestore'
 
 import firebaseConfig from './config'
 

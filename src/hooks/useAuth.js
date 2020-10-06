@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import firebase from "../firebase"
+import firebase from "../firebase/Proxy"
 
 const useAuth = () => {
   const [authUser, setAuthUser] = useState(null)
@@ -9,7 +9,6 @@ const useAuth = () => {
       setAuthUser(user ? user : null)
     })
 
-    //TODO To see if it's browser closing persistent
     return () => unsubscribe()
   }, [])
   return authUser

@@ -12,10 +12,10 @@ import SettingsIcon from "../images/SettingsIcon"
 import { useFirebase } from "../contexts/firebaseContext"
 
 const Header = ({ page }) => {
-  const { firebase } = useFirebase()
+  const { auth } = useFirebase()
 
   const logout = () => {
-    firebase.logout()
+    auth.logout()
     navigate("/")
   }
 

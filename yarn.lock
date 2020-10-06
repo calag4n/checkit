@@ -6773,11 +6773,6 @@ gatsby-page-utils@^0.2.26:
     lodash "^4.17.20"
     micromatch "^4.0.2"
 
-gatsby-plugin-firebase@^0.2.0-beta.4:
-  version "0.2.0-beta.4"
-  resolved "https://registry.yarnpkg.com/gatsby-plugin-firebase/-/gatsby-plugin-firebase-0.2.0-beta.4.tgz#a4d8bfdce8c65efa284d0c523f8524c28f4a786c"
-  integrity sha512-F1uh9T5dY38aeNvKzqj+3K655dce1QS70wuG4bhV9L3cnTJR2vitTWyIoCvRJJfPs7Xq7LgjUDmHDrEos4S3gQ==
-
 gatsby-plugin-html-attributes@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/gatsby-plugin-html-attributes/-/gatsby-plugin-html-attributes-1.0.5.tgz#811613bdeff119aa4fa61ed33b5147d52d5a7017"

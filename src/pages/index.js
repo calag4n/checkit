@@ -8,7 +8,7 @@ import google from "../images/google.svg"
 import { useFirebase } from "../contexts/firebaseContext"
 
 const IndexPage = () => {
-  const {user, firebase} = useFirebase()
+  const {user, firebase, auth} = useFirebase()
   
   console.log(user)
 
@@ -27,7 +27,7 @@ const IndexPage = () => {
     <Wrapper>
       <Title />
       <GoogleSignIn
-        onClick={()=>(firebase.login('google'))}
+        onClick={()=>(auth.login('google'))}
       >
         <img src={google} alt="logo google" />
         Connexion avec Google

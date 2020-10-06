@@ -13,6 +13,8 @@ const Checker = ({
   deleteTask,
   addTask,
 }) => {
+  
+
   const getPeriodInFrench = () => {
     const { period } = checker
     return period === "daily"
@@ -31,7 +33,7 @@ const Checker = ({
       <Content>
         {checker.tasks.map(({ task, checked }, index) => (
           <Task
-            key={`${checker.id}-${index}`}
+            key={`${checker.id}-${index}-${checker.tasks.length}`}
             uid={`${checker.id}-${index}`}
             index={index}
             task={task}

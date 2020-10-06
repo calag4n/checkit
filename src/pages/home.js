@@ -94,7 +94,9 @@ const Home = ({ location }) => {
 
   const deleteTask = index => {
     const updatedTasks = [...currentChecker.tasks]
+    console.log(updatedTasks)
     updatedTasks.splice(index, 1)
+    console.log(updatedTasks)
 
     setCurrentChecker(prev => ({ ...prev, tasks: updatedTasks }))
 

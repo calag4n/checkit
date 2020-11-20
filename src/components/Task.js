@@ -1,42 +1,65 @@
 import React from "react"
 import styled from "styled-components"
 import PropTypes from "prop-types"
-import { RiDeleteBack2Line } from "react-icons/ri";
+import { RiDeleteBack2Line } from "react-icons/ri"
+import { MdDragHandle } from "react-icons/md"
+import { Draggable } from "react-beautiful-dnd"
 
-const Task = ({ uid, index, task = "", checked , updateChecker, deleteTask }) => {
-
+const Task = ({
+  uid,
+  index,
+  task = "",
+  checked,
+  updateChecker,
+  deleteTask,
+  isDraggable,
+}) => {
   const handleChange = event => {
-		let changes 
-		if (event.target.name === `tasks[${index}]`) {
-			changes = event.target.value
-			updateChecker(index, changes, checked)
-		} else {
-			changes = event.target.checked
-			updateChecker(index, task, changes)
-		}
+    let changes
+    if (event.target.name === `tasks[${index}]`) {
+      changes = event.target.value
+      updateChecker(index, changes, checked)
+    } else {
+      changes = event.target.checked
+      updateChecker(index, task, changes)
+    }
   }
-  
-  return (
-    <Wrapper>
-      <Checkbox
-        type="checkbox"
-        id={`checkbox-${uid}`}
-        defaultChecked={checked}
-        onChange={e=> handleChange(e)}
-      />
-      <Label htmlFor={`checkbox-${uid}`} aria-describedby="label" />
-      <Input
-        type="text"
-        name={`tasks[${index}]`}
-        id={`input-${uid}`}
-        defaultValue={task}
-        onChange={e=> handleChange(e)}
-      />
 
-      <DeleteIcon onClick={()=>deleteTask(index)}>
-      <RiDeleteBack2Line/>
-      </DeleteIcon>
-    </Wrapper>
+  return (
+    <Draggable draggableId={uid} index={index} isDragDisabled={!isDraggable}>
+      {provided => (
+        <Wrapper
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+          ref={provided.innerRef}
+        >
+          {isDraggable ? (
+            <DragBloc />
+          ) : (
+            <>
+              <Checkbox
+                type="checkbox"
+                id={`checkbox-${uid}`}
+                defaultChecked={checked}
+                onChange={e => handleChange(e)}
+              />
+              <Label htmlFor={`checkbox-${uid}`} aria-describedby="label" />
+            </>
+          )}
+          <Input
+            type="text"
+            name={`tasks[${index}]`}
+            id={`input-${uid}`}
+            defaultValue={task}
+            onChange={e => handleChange(e)}
+          />
+
+          <DeleteIcon onClick={() => deleteTask(index)}>
+            <RiDeleteBack2Line />
+          </DeleteIcon>
+        </Wrapper>
+      )}
+    </Draggable>
   )
 }
 
@@ -44,9 +67,9 @@ Task.propTypes = {
   uid: PropTypes.string.isRequired,
   index: PropTypes.number.isRequired,
   task: PropTypes.string,
-	checked: PropTypes.bool,
-	updateChecker: PropTypes.func.isRequired,
-	deleteTask: PropTypes.func.isRequired,
+  checked: PropTypes.bool,
+  updateChecker: PropTypes.func.isRequired,
+  deleteTask: PropTypes.func.isRequired,
 }
 
 export default Task
@@ -107,6 +130,12 @@ const Checkbox = styled.input`
   opacity: 0.01;
 `
 
+const DragBloc = styled(MdDragHandle)`
+  font-size: 1.5em;
+  width: 2em;
+  height: 2em;
+`
+
 const Label = styled.label`
   position: relative;
   padding-left: 2.3em;
@@ -122,16 +151,16 @@ const Input = styled.input`
   }
 `
 
-const DeleteIcon = styled.a`     
-    cursor: pointer;
-    transition: background-color 200ms;
+const DeleteIcon = styled.a`
+  cursor: pointer;
+  transition: background-color 200ms;
 
-    & svg {
-      position: relative;
-      top: 14px;
-      left: 1px;
-      color: ${props => props.theme.colors.danger};
-      height: 20px;
-      width: 20px;
-    }
-`;
+  & svg {
+    position: relative;
+    top: 14px;
+    left: 1px;
+    color: ${props => props.theme.colors.danger};
+    height: 20px;
+    width: 20px;
+  }
+`

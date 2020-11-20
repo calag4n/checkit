@@ -1,9 +1,11 @@
-import React from "react"
+import React, { useState } from "react"
 import styled from "styled-components"
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd"
 import PropTypes from "prop-types"
 import { FaTrashAlt } from "react-icons/fa"
 
 import Task from "./Task"
+import Options from "./Options"
 
 const Checker = ({
   checker,
@@ -12,9 +14,11 @@ const Checker = ({
   updateChecker,
   deleteTask,
   addTask,
+  updateTasksOrder,
 }) => {
-  
 
+  const [isDraggable, setIsDraggable] = useState(false)
+  
   const getPeriodInFrench = () => {
     const { period } = checker
     return period === "daily"
@@ -23,6 +27,12 @@ const Checker = ({
       ? "Mensuelle"
       : "Hebdomadaire"
   }
+
+  const handleDragNDrop = () => {
+    setIsDraggable(prev=>!prev)
+  }
+
+
   return (
     <Wrapper>
       <H1 color={checker.color}>{checker.title}</H1>
@@ -30,20 +40,39 @@ const Checker = ({
       <h2>Périodicité: {getPeriodInFrench()}</h2>
       <Close onClick={closeChecker}>×</Close>
 
-      <Content>
-        {checker.tasks.map(({ task, checked }, index) => (
-          <Task
-            key={`${checker.id}-${index}-${checker.tasks.length}`}
-            uid={`${checker.id}-${index}`}
-            index={index}
-            task={task}
-            checked={checked}
-            updateChecker={updateChecker}
-            deleteTask={deleteTask}
-          />
-        ))}
+      <Options handleDragNDrop={handleDragNDrop} isDraggable={isDraggable}/>
 
-        <Button onClick={addTask} color={checker.color}>+</Button>
+      <Content>
+        <DragDropContext onDragEnd={updateTasksOrder}>
+          <Droppable droppableId={checker.id}>
+            {provided => (
+              <Ul
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+              >
+
+                {checker.tasks
+                  .map(({ task, checked }, index) => (
+                    <Task
+                      key={`${checker.id}-${task}-${index}`}
+                      uid={`${checker.id}-${task}-${index}`}
+                      index={index}
+                      task={task}
+                      checked={checked}
+                      updateChecker={updateChecker}
+                      deleteTask={deleteTask}
+                      isDraggable={isDraggable}
+                    />
+                  ))}
+                  {provided.placeholder}
+              </Ul>
+            )}
+          </Droppable>
+        </DragDropContext>
+
+        <Button onClick={addTask} color={checker.color}>
+          +
+        </Button>
 
         <TrashIcon onClick={() => removeChecker(checker.id)}>
           <FaTrashAlt />
@@ -72,7 +101,7 @@ const Wrapper = styled.div`
 
 const H1 = styled.h1`
   color: ${props => props.color};
-`;
+`
 
 const Close = styled.a`
   position: fixed;
@@ -93,8 +122,12 @@ const Content = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  padding-bottom:8vh;
+  padding-bottom: 8vh;
 `
+
+const Ul = styled.div`
+  
+`;
 
 const TrashIcon = styled.a`
   position: fixed;
@@ -121,4 +154,4 @@ const TrashIcon = styled.a`
 `
 const Button = styled.button`
   border-color: ${props => props.color};
-`;
+`

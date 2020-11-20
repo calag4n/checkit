@@ -26,11 +26,9 @@ const Home = ({ location }) => {
     const checkers = snapshot.docs.map(doc => {
       let newInit = doc.data().nextInit
       let initTask = [...doc.data().tasks]
-      console.log(doc.data())
 
       if (isPast(doc.data().nextInit.toDate())) {
         if (doc.data().period === "monthly") {
-          console.log("monthly")
           newInit = startOfMonth(addMonths(new Date(), 1))
         } else if (doc.data().period === "daily") {
           newInit = startOfDay(addDays(new Date(), 1))
@@ -50,7 +48,6 @@ const Home = ({ location }) => {
 
       return { id: doc.id, ...doc.data(), nextInit: newInit, tasks: initTask }
     })
-    console.log(checkers)
 
     setCheckers(checkers)
   }
@@ -83,20 +80,33 @@ const Home = ({ location }) => {
     setCurrentChecker(null)
   }
 
-  const updateChecker = (index, task, checked) => {
+  const updateChecker = (index, task, checked, position) => {
     const updatedTasks = [...currentChecker.tasks]
     updatedTasks[index] = { task, checked }
 
+    modifyDb(updatedTasks)
     setCurrentChecker(prev => ({ ...prev, tasks: updatedTasks }))
 
-    modifyDb(updatedTasks)
   }
+
+  const updateTasksOrder = dragResult => {
+    if (!dragResult.destination) return
+    const tasks = Array.from(currentChecker.tasks)
+    const source = dragResult.source.index
+    const destination = dragResult.destination.index
+    const task = tasks[source]
+    
+    const [reoderedTasks] = tasks.splice(source,1)
+    tasks.splice(destination, 0, reoderedTasks)
+    modifyDb(tasks)
+    
+    setCurrentChecker(prev => ({ ...prev, tasks }))
+  }
+  
 
   const deleteTask = index => {
     const updatedTasks = [...currentChecker.tasks]
-    console.log(updatedTasks)
     updatedTasks.splice(index, 1)
-    console.log(updatedTasks)
 
     setCurrentChecker(prev => ({ ...prev, tasks: updatedTasks }))
 
@@ -112,6 +122,8 @@ const Home = ({ location }) => {
     modifyDb(updatedTasks)
   }
 
+
+
   return (
     <Layout page="home">
       {currentChecker ? (
@@ -122,6 +134,7 @@ const Home = ({ location }) => {
           updateChecker={updateChecker}
           deleteTask={deleteTask}
           addTask={addTask}
+          updateTasksOrder={updateTasksOrder}
         />
       ) : (
         <CheckersList>

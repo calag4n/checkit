@@ -37,8 +37,8 @@ Layout.propTypes = {
 const LayoutContainer = (props) => {
   return (
     <ThemeProvider theme={theme}>
-      <Layout {...props}></Layout>
       <GlobalStyle />
+      <Layout {...props}></Layout>
     </ThemeProvider>
   )
 }

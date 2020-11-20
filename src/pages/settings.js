@@ -2,6 +2,7 @@ import React, { useEffect } from "react"
 import PropTypes from "prop-types"
 import { useForm } from "react-hook-form"
 import styled from "styled-components"
+import rndColor from 'randomcolor'
 
 import addMonths from 'date-fns/addMonths'
 import addWeeks from 'date-fns/addWeeks'
@@ -21,7 +22,7 @@ const Settings = ({ location, tasks = [] }) => {
 
   const onSubmit = ({title, period, begin}) => {
 
-    const randomColor = "#"+((1<<24)*Math.random()|0).toString(16)
+    const randomColor = rndColor()
 
 
     let nextInit
@@ -50,18 +51,6 @@ const Settings = ({ location, tasks = [] }) => {
 
     navigate('/home')
   }
-
-
-  useEffect(() => {
-    // const addChecker = () => {
-    //   firebase.db.collection('checkers').add({
-    //     created: new Date(),
-    //     title: '_',
-    //     user: firebase.db.doc('users/' + 'MgEYLYuOsH8bODLibx6r'),
-    //   })
-    // }
-    // return addChecker()
-  }, [])
 
   return (
     <Layout page="settings">

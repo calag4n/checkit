@@ -158,7 +158,8 @@ export default Home
 const CheckersList = styled.div`
   height: 100%;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  /* grid-template-columns: repeat(2, 1fr); */
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 15px;
 `
 
@@ -169,4 +170,8 @@ const CheckerBlock = styled.div`
   border-radius: 8px;
   width: 80%;
   box-shadow: 3px 4px 8px 0px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  word-wrap: none;
+  word-break: break-word;
+  font-size: clamp(12px, 1em, 20px);
 `

@@ -1,12 +1,14 @@
-import React from 'react'
+import React from "react"
 import { RiDragMoveFill } from "react-icons/ri"
-import styled from 'styled-components'
+import styled from "styled-components"
 
-
-const Options = ({handleDragNDrop, isDraggable}) => {
+const Options = ({ handleDragNDrop, isDraggable }) => {
   return (
     <Wrapper>
-      <DragIcon onClick={handleDragNDrop} isDraggable={isDraggable}/>
+      <RiDragMoveFill
+        onClick={handleDragNDrop}
+        className={`${isDraggable ? "option-icon-active" : ""}`}
+      />
     </Wrapper>
   )
 }
@@ -17,17 +19,17 @@ const Wrapper = styled.div`
   font-size: 2em;
   margin-bottom: 0.5em;
   line-height: 2.4em;
-  
+
   & > * {
-    border: 1px solid grey ;
+    border: 1px solid grey;
     border-radius: 3px;
     background-color: white;
     box-shadow: 1px 1px 1px black;
-  }
-`;
+    cursor: pointer;
 
-const DragIcon = styled(RiDragMoveFill)`
-  cursor: pointer;
-  ${props=>props.isDraggable && 'color: red;'}
-  ${props=>props.isDraggable && 'transform: scale(1.5);'}
-`;
+    &.option-icon-active {
+      color: red;
+      transform: scale(1.5);
+    }
+  }
+`

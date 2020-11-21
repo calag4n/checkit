@@ -5,7 +5,7 @@ import { useStaticQuery, graphql } from "gatsby"
 import styled, { ThemeProvider } from "styled-components"
 
 import { theme, GlobalStyle } from "../theme"
-import Header from "./header"
+import Header from "./Header"
 import "./layout.css"
 
 const Layout = ({ children, page }) => {

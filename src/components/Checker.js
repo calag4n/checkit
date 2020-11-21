@@ -6,19 +6,14 @@ import { FaTrashAlt } from "react-icons/fa"
 
 import Task from "./Task"
 import Options from "./Options"
+import { useCheckers } from "../contexts/checkerContext"
 
 const Checker = ({
   checker,
-  closeChecker,
-  removeChecker,
-  updateChecker,
-  deleteTask,
-  addTask,
-  updateTasksOrder,
 }) => {
-
   const [isDraggable, setIsDraggable] = useState(false)
-  
+  const { currentChecker, setCurrentChecker } = useCheckers()
+
   const getPeriodInFrench = () => {
     const { period } = checker
     return period === "daily"
@@ -29,52 +24,48 @@ const Checker = ({
   }
 
   const handleDragNDrop = () => {
-    setIsDraggable(prev=>!prev)
+    setIsDraggable(prev => !prev)
   }
-
 
   return (
     <Wrapper>
       <H1 color={checker.color}>{checker.title}</H1>
 
       <h2>Périodicité: {getPeriodInFrench()}</h2>
-      <Close onClick={closeChecker}>×</Close>
+      <Close onClick={()=>setCurrentChecker({action: 'close'})}>×</Close>
 
-      <Options handleDragNDrop={handleDragNDrop} isDraggable={isDraggable}/>
+      <Options handleDragNDrop={handleDragNDrop} isDraggable={isDraggable} />
 
       <Content>
-        <DragDropContext onDragEnd={updateTasksOrder}>
+        <DragDropContext onDragEnd={dragInfos=>setCurrentChecker({action: 'updateTasksOrder', value: dragInfos})}>
           <Droppable droppableId={checker.id}>
             {provided => (
-              <Ul
-                ref={provided.innerRef}
-                {...provided.droppableProps}
-              >
-
-                {checker.tasks
-                  .map(({ task, checked }, index) => (
-                    <Task
-                      key={`${checker.id}-${task}-${index}`}
-                      uid={`${checker.id}-${task}-${index}`}
-                      index={index}
-                      task={task}
-                      checked={checked}
-                      updateChecker={updateChecker}
-                      deleteTask={deleteTask}
-                      isDraggable={isDraggable}
-                    />
-                  ))}
-                  {provided.placeholder}
+              <Ul ref={provided.innerRef} {...provided.droppableProps}>
+                {currentChecker.tasks.map(({ task, checked }, index) => (
+                  <Task
+                    key={`taskKey-${index}`}
+                    uid={`${checker.id}-${task}-${index}`}
+                    index={index}
+                    task={task}
+                    checked={checked}
+                    isDraggable={isDraggable}
+                  />
+                ))}
+                {provided.placeholder}
               </Ul>
             )}
           </Droppable>
         </DragDropContext>
 
-        <Button onClick={addTask} color={checker.color}>
+        <Button onClick={()=>setCurrentChecker({ action: "addTask" })} color={checker.color}>
           +
         </Button>
 
-        <TrashIcon onClick={() => removeChecker(checker.id)}>
+        <TrashIcon
+          onClick={() =>
+            setCurrentChecker({ action: "removeChecker", value: checker.id })
+          }
+        >
           <FaTrashAlt />
         </TrashIcon>
       </Content>
@@ -84,11 +75,6 @@ const Checker = ({
 
 Checker.propTypes = {
   checker: PropTypes.object.isRequired,
-  closeChecker: PropTypes.func.isRequired,
-  removeChecker: PropTypes.func.isRequired,
-  updateChecker: PropTypes.func.isRequired,
-  deleteTask: PropTypes.func.isRequired,
-  addTask: PropTypes.func.isRequired,
 }
 
 export default Checker
@@ -125,9 +111,7 @@ const Content = styled.div`
   padding-bottom: 8vh;
 `
 
-const Ul = styled.div`
-  
-`;
+const Ul = styled.div``
 
 const TrashIcon = styled.a`
   position: fixed;

@@ -4,29 +4,34 @@ import PropTypes from "prop-types"
 import { RiDeleteBack2Line } from "react-icons/ri"
 import { MdDragHandle } from "react-icons/md"
 import { Draggable } from "react-beautiful-dnd"
+import { useCheckers } from "../contexts/checkerContext"
 
-const Task = ({
-  uid,
-  index,
-  task = "",
-  checked,
-  updateChecker,
-  deleteTask,
-  isDraggable,
-}) => {
+const Task = ({ uid, index, task = "", checked, isDraggable }) => {
+  const { setCurrentChecker } = useCheckers()
+
   const handleChange = event => {
-    let changes
+    let update
     if (event.target.name === `tasks[${index}]`) {
-      changes = event.target.value
-      updateChecker(index, changes, checked)
+      update = event.target.value
+      setCurrentChecker({
+        action: "updateChecker",
+        value: { index, task: update, checked },
+      })
     } else {
-      changes = event.target.checked
-      updateChecker(index, task, changes)
+      update = event.target.checked
+      setCurrentChecker({
+        action: "updateChecker",
+        value: { index, task, checked: update },
+      })
     }
   }
 
   return (
-    <Draggable draggableId={uid} index={index} isDragDisabled={!isDraggable}>
+    <Draggable
+      draggableId={`draggable-${index}`}
+      index={index}
+      isDragDisabled={!isDraggable}
+    >
       {provided => (
         <Wrapper
           {...provided.draggableProps}
@@ -50,11 +55,15 @@ const Task = ({
             type="text"
             name={`tasks[${index}]`}
             id={`input-${uid}`}
-            defaultValue={task}
+            value={task}
             onChange={e => handleChange(e)}
           />
 
-          <DeleteIcon onClick={() => deleteTask(index)}>
+          <DeleteIcon
+            onClick={() =>
+              setCurrentChecker({ action: "deleteTask", value: index })
+            }
+          >
             <RiDeleteBack2Line />
           </DeleteIcon>
         </Wrapper>
@@ -68,8 +77,6 @@ Task.propTypes = {
   index: PropTypes.number.isRequired,
   task: PropTypes.string,
   checked: PropTypes.bool,
-  updateChecker: PropTypes.func.isRequired,
-  deleteTask: PropTypes.func.isRequired,
 }
 
 export default Task

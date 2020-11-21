@@ -10,9 +10,17 @@ import ListIcon from "../images/ListIcon.js"
 import SettingsIcon from "../images/SettingsIcon"
 
 import { useFirebase } from "../contexts/firebaseContext"
+import { useCheckers } from "../contexts/checkerContext.js"
 
 const Header = ({ page }) => {
   const { logout } = useFirebase()
+  const { setCurrentChecker } = useCheckers()
+
+  const handleGoList = () => {
+    setCurrentChecker({action: 'close'})
+    page !== "home" && navigate("/home")
+  }
+  
 
   return (
     <Navbar>
@@ -20,7 +28,7 @@ const Header = ({ page }) => {
       
       <ListIcon
         active={page === "home"}
-        onClick={() => page !== "home" && navigate("/home")}
+        onClick={handleGoList}
       />
 
       {page === "home" ? (

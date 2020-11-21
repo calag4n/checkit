@@ -16,11 +16,11 @@ import Checker from "../components/Checker"
 import Layout from "../components/layout"
 
 import { useFirebase } from "../contexts/firebaseContext"
+import { useCheckers } from "../contexts/checkerContext"
 
 const Home = ({ location }) => {
   const { firebase, user } = useFirebase()
-  const [checkers, setCheckers] = useState([])
-  const [currentChecker, setCurrentChecker] = useState(null)
+  const {checkers, setCheckers, currentChecker, setCurrentChecker} = useCheckers()
 
   const handleSnapshot = snapshot => {
     const checkers = snapshot.docs.map(doc => {
@@ -67,74 +67,11 @@ const Home = ({ location }) => {
     }
   }, [firebase, user])
 
-  const modifyDb = updatedTasks => {
-    firebase.db
-      .collection("checkers")
-      .doc(currentChecker.id)
-      .update({ tasks: updatedTasks })
-  }
-
-  const removeChecker = id => {
-    firebase.db.collection("checkers").doc(id).delete()
-
-    setCurrentChecker(null)
-  }
-
-  const updateChecker = (index, task, checked, position) => {
-    const updatedTasks = [...currentChecker.tasks]
-    updatedTasks[index] = { task, checked }
-
-    modifyDb(updatedTasks)
-    setCurrentChecker(prev => ({ ...prev, tasks: updatedTasks }))
-
-  }
-
-  const updateTasksOrder = dragResult => {
-    if (!dragResult.destination) return
-    const tasks = Array.from(currentChecker.tasks)
-    const source = dragResult.source.index
-    const destination = dragResult.destination.index
-    const task = tasks[source]
-    
-    const [reoderedTasks] = tasks.splice(source,1)
-    tasks.splice(destination, 0, reoderedTasks)
-    modifyDb(tasks)
-    
-    setCurrentChecker(prev => ({ ...prev, tasks }))
-  }
-  
-
-  const deleteTask = index => {
-    const updatedTasks = [...currentChecker.tasks]
-    updatedTasks.splice(index, 1)
-
-    setCurrentChecker(prev => ({ ...prev, tasks: updatedTasks }))
-
-    modifyDb(updatedTasks)
-  }
-
-  const addTask = () => {
-    const updatedTasks = [...currentChecker.tasks]
-    updatedTasks.push({ task: "", checked: false })
-
-    setCurrentChecker(prev => ({ ...prev, tasks: updatedTasks }))
-
-    modifyDb(updatedTasks)
-  }
-
-
-
   return (
     <Layout page="home">
       {currentChecker ? (
         <Checker
           checker={currentChecker}
-          closeChecker={() => setCurrentChecker(null)}
-          removeChecker={removeChecker}
-          updateChecker={updateChecker}
-          deleteTask={deleteTask}
-          addTask={addTask}
-          updateTasksOrder={updateTasksOrder}
         />
       ) : (
         <CheckersList>
@@ -142,7 +79,7 @@ const Home = ({ location }) => {
             <CheckerBlock
               key={checker.id}
               color={checker.color}
-              onClick={() => setCurrentChecker(checkers[index])}
+              onClick={() => setCurrentChecker({action: 'open', value: index})}
             >
               {checker.title}
             </CheckerBlock>

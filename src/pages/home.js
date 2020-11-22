@@ -20,7 +20,12 @@ import { useCheckers } from "../contexts/checkerContext"
 
 const Home = ({ location }) => {
   const { firebase, user } = useFirebase()
-  const {checkers, setCheckers, currentChecker, setCurrentChecker} = useCheckers()
+  const {
+    checkers,
+    setCheckers,
+    currentChecker,
+    setCurrentChecker,
+  } = useCheckers()
 
   const handleSnapshot = snapshot => {
     const checkers = snapshot.docs.map(doc => {
@@ -70,16 +75,16 @@ const Home = ({ location }) => {
   return (
     <Layout page="home">
       {currentChecker ? (
-        <Checker
-          checker={currentChecker}
-        />
+        <Checker checker={currentChecker} />
       ) : (
         <CheckersList>
-          {checkers.map((checker, index) => (
+          {checkers?.map((checker, index) => (
             <CheckerBlock
               key={checker.id}
               color={checker.color}
-              onClick={() => setCurrentChecker({action: 'open', value: index})}
+              onClick={() =>
+                setCurrentChecker({ action: "open", value: index })
+              }
             >
               {checker.title}
             </CheckerBlock>

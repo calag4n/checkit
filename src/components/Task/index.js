@@ -1,10 +1,10 @@
 import React from "react"
 import styled from "styled-components"
 import PropTypes from "prop-types"
-import { RiDeleteBack2Line } from "react-icons/ri"
 import { MdDragHandle } from "react-icons/md"
 import { Draggable } from "react-beautiful-dnd"
-import { useCheckers } from "../contexts/checkerContext"
+import { useCheckers } from "../../contexts/checkerContext"
+import TextInput from "./TextInput"
 
 const Task = ({ uid, index, task = "", checked, isDraggable }) => {
   const { setCurrentChecker } = useCheckers()
@@ -34,38 +34,28 @@ const Task = ({ uid, index, task = "", checked, isDraggable }) => {
     >
       {provided => (
         <Wrapper
+          ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
-          ref={provided.innerRef}
         >
-          {isDraggable ? (
-            <DragBloc />
-          ) : (
-            <>
-              <Checkbox
-                type="checkbox"
-                id={`checkbox-${uid}`}
-                defaultChecked={checked}
-                onChange={e => handleChange(e)}
-              />
-              <Label htmlFor={`checkbox-${uid}`} aria-describedby="label" />
-            </>
-          )}
-          <Input
+          <Checkbox
+            type="checkbox"
+            id={`checkbox-${uid}`}
+            defaultChecked={checked}
+            onChange={e => handleChange(e)}
+          />
+          <Label htmlFor={`checkbox-${uid}`} aria-describedby="label" />
+
+          <TextInput
             type="text"
             name={`tasks[${index}]`}
             id={`input-${uid}`}
             value={task}
+            index={index}
             onChange={e => handleChange(e)}
+            isDraggable={isDraggable}
           />
-
-          <DeleteIcon
-            onClick={() =>
-              setCurrentChecker({ action: "deleteTask", value: index })
-            }
-          >
-            <RiDeleteBack2Line />
-          </DeleteIcon>
+          <DragBloc className={isDraggable ? "isDraggable" : ""} />
         </Wrapper>
       )}
     </Draggable>
@@ -86,8 +76,9 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
+  height: 3em;
 
-  & [type="checkbox"]:checked ~ input[type="text"] {
+  & [type="checkbox"]:checked ~ label.textInput {
     transition: all 245ms;
     border: 3px solid ${props => props.theme.colors.green};
   }
@@ -141,6 +132,17 @@ const DragBloc = styled(MdDragHandle)`
   font-size: 1.5em;
   width: 2em;
   height: 2em;
+  position: absolute;
+  right: -2%;
+  transform: translateX(200%);
+  transition: transform 245ms;
+  display: none;
+
+  &.isDraggable {
+    transform: translateX(0);
+    position: relative;
+    display: block;
+  }
 `
 
 const Label = styled.label`
@@ -149,25 +151,4 @@ const Label = styled.label`
   font-size: 1.5em;
   line-height: 1.7;
   cursor: pointer;
-`
-
-const Input = styled.input`
-  &[type="text"] {
-    transition: all 245ms;
-    border: 3px solid ${props => props.theme.colors.primary};
-  }
-`
-
-const DeleteIcon = styled.a`
-  cursor: pointer;
-  transition: background-color 200ms;
-
-  & svg {
-    position: relative;
-    top: 14px;
-    left: 1px;
-    color: ${props => props.theme.colors.danger};
-    height: 20px;
-    width: 20px;
-  }
 `

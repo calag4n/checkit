@@ -17,8 +17,17 @@ export default Options
 
 const Wrapper = styled.div`
   font-size: 2em;
-  margin-bottom: 0.5em;
   line-height: 2.4em;
+  /* margin-left: 1em;
+  margin-right: 1em; */
+  position: sticky;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  z-index: 20;
+  padding: 1em;
+  width: 100%;
+  background-color: ${({ theme }) => theme.colors.bg};
 
   & > * {
     border: 1px solid grey;

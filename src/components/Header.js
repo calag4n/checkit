@@ -17,19 +17,15 @@ const Header = ({ page }) => {
   const { setCurrentChecker } = useCheckers()
 
   const handleGoList = () => {
-    setCurrentChecker({action: 'close'})
+    setCurrentChecker({ action: "close" })
     page !== "home" && navigate("/home")
   }
-  
 
   return (
     <Navbar>
       <LogoutIcon onClick={logout} />
-      
-      <ListIcon
-        active={page === "home"}
-        onClick={handleGoList}
-      />
+
+      <ListIcon active={page === "home"} onClick={handleGoList} />
 
       {page === "home" ? (
         <PlusIcon
@@ -67,6 +63,7 @@ const Navbar = styled.header`
   align-items: center;
   width: 100vw;
   box-shadow: 0px -5px 54px 3px rgba(0, 0, 0, 0.16);
+  z-index: 20;
 
   background-color: white;
 

@@ -21,10 +21,11 @@ const Layout = ({ children, page }) => {
 
   return (
     <>
-      <Header siteTitle={data.site.siteMetadata?.title || `Title`} page={page}/>
-      <Container>
-        {children}
-      </Container>
+      <Header
+        siteTitle={data.site.siteMetadata?.title || `Title`}
+        page={page}
+      />
+      <Container>{children}</Container>
     </>
   )
 }
@@ -34,7 +35,7 @@ Layout.propTypes = {
   page: PropTypes.string,
 }
 
-const LayoutContainer = (props) => {
+const LayoutContainer = props => {
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />
@@ -46,9 +47,8 @@ const LayoutContainer = (props) => {
 export default LayoutContainer
 
 const Container = styled.main`
-  height: 92vh;
+  min-height: 92vh;
   margin: 0 auto;
-  max-width: 960;
-  padding: 1.25rem 1.0875rem 1.25rem;
-`;
-
+  /* max-width: 960vw; */
+  padding: 1.25rem 0;
+`

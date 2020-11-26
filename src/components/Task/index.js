@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import styled from "styled-components"
 import PropTypes from "prop-types"
 import { MdDragHandle } from "react-icons/md"
@@ -8,6 +8,7 @@ import TextInput from "./TextInput"
 
 const Task = ({ uid, index, task = "", checked }) => {
   const { setCurrentChecker, isDraggable } = useCheckers()
+  const [isDragging, setIsDragging] = useState(false)
 
   const handleChange = event => {
     let update
@@ -26,30 +27,36 @@ const Task = ({ uid, index, task = "", checked }) => {
     }
   }
 
-  const getItemStyle = (isDragging, draggableStyle) => ({
-    // change background colour if dragging
-    opacity: isDragging ? 0.5 : 1,
+  useEffect(() => {
+    const draggingEnd = () => {
+      setIsDragging(false)
+    }
 
-    // styles we need to apply on draggables
-    ...draggableStyle,
-  })
+    if (isDragging) {
+      document.addEventListener("mouseup", draggingEnd)
+    }
+
+    return () => {
+      document.removeEventListener("mouseup", draggingEnd)
+    }
+  }, [isDragging])
+
+  const handleDragging = () => {
+    setIsDragging(true)
+  }
 
   return (
     <Draggable
       draggableId={`taskKey-${index}`}
       index={index}
       isDragDisabled={!isDraggable}
-      // key={`draggable-${index}`}
     >
-      {(provided, snapshot) => (
+      {provided => (
         <Wrapper
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
-          style={getItemStyle(
-            snapshot.isDragging,
-            provided.draggableProps.style
-          )}
+          isDragging={isDragging}
         >
           <Checkbox
             type="checkbox"
@@ -68,7 +75,11 @@ const Task = ({ uid, index, task = "", checked }) => {
             onChange={e => handleChange(e)}
             onClick={() => console.log(provided)}
           />
-          <DragBloc className={isDraggable ? "isDraggable" : ""} />
+          <DragBloc
+            className={isDraggable ? "isDraggable" : ""}
+            onMouseDown={handleDragging}
+            // onMouseUpCapture={() => setIsDragging(false)}
+          />
         </Wrapper>
       )}
     </Draggable>
@@ -91,6 +102,7 @@ const Wrapper = styled.div`
   justify-content: flex-start;
   height: 3em;
   position: relative;
+  opacity: ${props => (props.isDragging ? 0.5 : 1)};
 
   & [type="checkbox"]:checked ~ label.textInput {
     transition: all 245ms;

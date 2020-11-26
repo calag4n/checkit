@@ -47,7 +47,6 @@ const Checker = () => {
                     index={index}
                     task={task}
                     checked={checked}
-                    // draggableId={`taskKey-${index}`}
                   />
                 ))}
                 {provided.placeholder}

@@ -4,7 +4,6 @@ import { CgRemoveR } from "react-icons/cg"
 import { useCheckers } from "../../contexts/checkerContext"
 
 const TextInput = ({ index, ...props }) => {
-  const [isFocused, setIsFocused] = useState(false)
   const { setCurrentChecker, isDraggable } = useCheckers()
 
   const handleDelete = event => {
@@ -14,11 +13,7 @@ const TextInput = ({ index, ...props }) => {
 
   return (
     <Label className={`textInput ${isDraggable ? "isDraggable" : ""}`}>
-      <Input
-        // onFocus={() => setIsFocused(true)}
-        // onBlur={() => setIsFocused(false)}
-        {...props}
-      />
+      <Input {...props} />
 
       <DeleteIcon onClick={handleDelete}>
         <CgRemoveR />
@@ -41,8 +36,6 @@ const DeleteIcon = styled.a`
 
   & svg {
     position: relative;
-    /* top: 14px;
-    left: 1px; */
     color: ${props => props.theme.colors.danger};
     height: 20px;
     width: 20px;

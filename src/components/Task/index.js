@@ -53,7 +53,6 @@ const Task = ({ uid, index, task = "", checked }) => {
             value={task}
             index={index}
             onChange={e => handleChange(e)}
-            isDraggable={isDraggable}
           />
           <DragBloc className={isDraggable ? "isDraggable" : ""} />
         </Wrapper>

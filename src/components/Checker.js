@@ -8,12 +8,16 @@ import Task from "./Task"
 import Options from "./Options"
 import { useCheckers } from "../contexts/checkerContext"
 
-const Checker = ({ checker }) => {
-  const [isDraggable, setIsDraggable] = useState(false)
-  const { currentChecker, setCurrentChecker } = useCheckers()
+const Checker = () => {
+  const {
+    currentChecker,
+    setCurrentChecker,
+    isDraggable,
+    setIsDraggable,
+  } = useCheckers()
 
   const getPeriodInFrench = () => {
-    const { period } = checker
+    const { period } = currentChecker
     return period === "daily"
       ? "Quotidient"
       : period === "monthly"
@@ -27,12 +31,14 @@ const Checker = ({ checker }) => {
 
   return (
     <Wrapper>
-      <H1 color={checker.color}>{checker.title}</H1>
+      <TitleWrapper>
+        <H1 color={currentChecker.color}>{currentChecker.title}</H1>
 
-      <h2>Périodicité: {getPeriodInFrench()}</h2>
-      <Close onClick={() => setCurrentChecker({ action: "close" })}>×</Close>
+        <h2>Périodicité: {getPeriodInFrench()}</h2>
+        <Close onClick={() => setCurrentChecker({ action: "close" })}>×</Close>
 
-      <Options handleDragNDrop={handleDragNDrop} isDraggable={isDraggable} />
+        {/* <Options handleDragNDrop={handleDragNDrop} isDraggable={isDraggable} /> */}
+      </TitleWrapper>
 
       <Content>
         <DragDropContext
@@ -40,13 +46,13 @@ const Checker = ({ checker }) => {
             setCurrentChecker({ action: "updateTasksOrder", value: dragInfos })
           }
         >
-          <Droppable droppableId={checker.id}>
+          <Droppable droppableId={currentChecker.id}>
             {provided => (
               <Ul ref={provided.innerRef} {...provided.droppableProps}>
                 {currentChecker.tasks.map(({ task, checked }, index) => (
                   <Task
                     key={`taskKey-${index}`}
-                    uid={`${checker.id}-${task}-${index}`}
+                    uid={`${currentChecker.id}-${task}-${index}`}
                     index={index}
                     task={task}
                     checked={checked}
@@ -61,14 +67,17 @@ const Checker = ({ checker }) => {
 
         <Button
           onClick={() => setCurrentChecker({ action: "addTask" })}
-          color={checker.color}
+          color={currentChecker.color}
         >
           +
         </Button>
 
         <TrashIcon
           onClick={() =>
-            setCurrentChecker({ action: "removeChecker", value: checker.id })
+            setCurrentChecker({
+              action: "removeChecker",
+              value: currentChecker.id,
+            })
           }
         >
           <FaTrashAlt />
@@ -78,16 +87,16 @@ const Checker = ({ checker }) => {
   )
 }
 
-Checker.propTypes = {
-  checker: PropTypes.object.isRequired,
-}
-
 export default Checker
 
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
+  /* align-items: center; */
   height: 100%;
+  max-width: 1400px;
+  min-width: 50%;
+  margin: auto;
 `
 
 const H1 = styled.h1`
@@ -95,7 +104,7 @@ const H1 = styled.h1`
 `
 
 const Close = styled.a`
-  position: fixed;
+  position: absolute;
   top: 20px;
   right: 20px;
   font-size: 2.6em;
@@ -147,4 +156,8 @@ const TrashIcon = styled.a`
 `
 const Button = styled.button`
   border-color: ${props => props.color};
+`
+
+const TitleWrapper = styled.div`
+  padding: 1.5em;
 `

@@ -11,10 +11,11 @@ import SettingsIcon from "../images/SettingsIcon"
 
 import { useFirebase } from "../contexts/firebaseContext"
 import { useCheckers } from "../contexts/checkerContext.js"
+import { CgReorder } from "react-icons/cg"
 
 const Header = ({ page }) => {
   const { logout } = useFirebase()
-  const { setCurrentChecker } = useCheckers()
+  const { setCurrentChecker, isDraggable, setIsDraggable } = useCheckers()
 
   const handleGoList = () => {
     setCurrentChecker({ action: "close" })
@@ -23,16 +24,22 @@ const Header = ({ page }) => {
 
   return (
     <Navbar>
-      <LogoutIcon onClick={logout} />
+      {page === "checker" ? (
+        <SortIcon
+          active={isDraggable}
+          onClick={() => setIsDraggable(prev => !prev)}
+        >
+          <CgReorder />
+        </SortIcon>
+      ) : (
+        <LogoutIcon onClick={logout} />
+      )}
 
       <ListIcon active={page === "home"} onClick={handleGoList} />
 
       {page === "home" ? (
         <PlusIcon
-          onClick={() =>
-            page !== "settings" &&
-            navigate("/settings", { state: { uuid: uuidv4() } })
-          }
+          onClick={() => navigate("/new", { state: { uuid: uuidv4() } })}
         >
           <FaRegPlusSquare />
         </PlusIcon>
@@ -51,6 +58,15 @@ Header.propTypes = {
 }
 
 export default Header
+
+const SortIcon = styled.a`
+  height: 20px;
+  width: 20px;
+  font-size: 1.5em;
+  cursor: pointer;
+  color: ${({ theme, active }) =>
+    active ? theme.colors.primary : "inherited"};
+`
 
 const Navbar = styled.header`
   position: fixed;

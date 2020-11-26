@@ -3,23 +3,24 @@ import styled from "styled-components"
 import { CgRemoveR } from "react-icons/cg"
 import { useCheckers } from "../../contexts/checkerContext"
 
-const TextInput = ({ index, isDraggable, ...props }) => {
+const TextInput = ({ index, ...props }) => {
   const [isFocused, setIsFocused] = useState(false)
-  const { setCurrentChecker } = useCheckers()
+  const { setCurrentChecker, isDraggable } = useCheckers()
+
+  const handleDelete = event => {
+    event.stopPropagation()
+    setCurrentChecker({ action: "deleteTask", value: index })
+  }
 
   return (
     <Label className={`textInput ${isDraggable ? "isDraggable" : ""}`}>
       <Input
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
+        // onFocus={() => setIsFocused(true)}
+        // onBlur={() => setIsFocused(false)}
         {...props}
       />
 
-      <DeleteIcon
-        onClick={() =>
-          setCurrentChecker({ action: "deleteTask", value: index })
-        }
-      >
+      <DeleteIcon onClick={handleDelete}>
         <CgRemoveR />
       </DeleteIcon>
     </Label>
@@ -30,10 +31,13 @@ export default TextInput
 
 const DeleteIcon = styled.a`
   cursor: pointer;
-  transition: background-color 200ms;
+  transition: all 400ms;
   position: absolute;
   top: calc(50% - 10px);
   right: 10px;
+
+  opacity: 0;
+  pointer-events: none;
 
   & svg {
     position: relative;
@@ -52,9 +56,15 @@ const Label = styled.label`
   border-radius: 5px;
   width: 100%;
   position: relative;
+  z-index: 20;
 
   &.isDraggable {
     width: 85%;
+
+    & > a {
+      opacity: 1;
+      pointer-events: all;
+    }
   }
 `
 

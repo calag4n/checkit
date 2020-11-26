@@ -1,3 +1,4 @@
+import { navigate } from "gatsby"
 import React, {
   useReducer,
   createContext,
@@ -5,6 +6,7 @@ import React, {
   useEffect,
   useState,
 } from "react"
+import { checkerInitObject } from "./checkerInitObject"
 import { useFirebase } from "./firebaseContext"
 
 const checkersContext = createContext({})
@@ -14,35 +16,35 @@ export const useCheckers = () => useContext(checkersContext)
 export const CheckersProvider = ({ children }) => {
   const [checkers, setCheckers] = useState([])
   const { firebase, user } = useFirebase()
+  const [isDraggable, setIsDraggable] = useState(false)
 
   const reducer = (state, payload) => {
-    let _state = Object.assign({}, state);
+    let _state = Object.assign({}, state)
     let _tasks = state ? Array.from(state.tasks) : []
     const { action, value } = payload
     let index, task, checked
 
     const modifyDb = (id, tasks) => {
-      firebase.db
-        .collection("checkers")
-        .doc(id)
-        .update({ tasks })
+      firebase.db.collection("checkers").doc(id).update({ tasks })
     }
 
     switch (action) {
-      case 'open':
-        _state = {...checkers[value]}
-        console.log(_state)
+      case "open":
+        _state = { ...checkers[value] }
+        navigate("/checker")
         return _state
 
-      case 'close':
-        return null
+      case "close":
+        navigate("/home")
+        setIsDraggable(false)
+        return checkerInitObject
 
       case "removeChecker":
         firebase.db.collection("checkers").doc(value).delete()
-        return null
+        return checkerInitObject
 
       case "updateChecker":
-        ({ index, task, checked } = value) 
+        ;({ index, task, checked } = value)
         _tasks[index] = { task, checked }
         modifyDb(_state.id, _tasks)
         return { ..._state, tasks: _tasks }
@@ -56,22 +58,22 @@ export const CheckersProvider = ({ children }) => {
         modifyDb(_state.id, _tasks)
         return { ..._state, tasks: _tasks }
 
-      case 'addTask':
+      case "addTask":
         _tasks.push({ task: "", checked: false })
         modifyDb(_state.id, _tasks)
         return { ..._state, tasks: _tasks }
 
-      case 'updateTasksOrder':
+      case "updateTasksOrder":
         if (!value.destination) return
-        
+
         const source = value.source.index
         const destination = value.destination.index
         task = _tasks[source]
 
-        _tasks.splice(source,1)
+        _tasks.splice(source, 1)
         _tasks.splice(destination, 0, task)
-   
-        modifyDb(_state.id, _tasks) 
+
+        modifyDb(_state.id, _tasks)
         return { ..._state, tasks: _tasks }
 
       default:
@@ -79,8 +81,10 @@ export const CheckersProvider = ({ children }) => {
     }
   }
 
-  const [currentChecker, setCurrentChecker] = useReducer(reducer, null)
-
+  const [currentChecker, setCurrentChecker] = useReducer(
+    reducer,
+    checkerInitObject
+  )
 
   return (
     <checkersContext.Provider
@@ -89,6 +93,8 @@ export const CheckersProvider = ({ children }) => {
         setCurrentChecker,
         checkers,
         setCheckers,
+        isDraggable,
+        setIsDraggable,
       }}
     >
       {children}

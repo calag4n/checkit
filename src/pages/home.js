@@ -11,9 +11,8 @@ import {
   isPast,
 } from "date-fns"
 
-import Checker from "../components/Checker"
-
 import Layout from "../components/layout"
+import Checker from "../components/Checker"
 
 import { useFirebase } from "../contexts/firebaseContext"
 import { useCheckers } from "../contexts/checkerContext"
@@ -26,6 +25,7 @@ const Home = ({ location }) => {
     currentChecker,
     setCurrentChecker,
   } = useCheckers()
+  console.log(checkers)
 
   const handleSnapshot = snapshot => {
     const checkers = snapshot.docs.map(doc => {
@@ -74,11 +74,12 @@ const Home = ({ location }) => {
 
   return (
     <Layout page="home">
-      {currentChecker ? (
-        <Checker checker={currentChecker} />
-      ) : (
-        <CheckersList>
-          {checkers?.map((checker, index) => (
+      <CheckersList>
+        {checkers
+          ?.sort((a, b) =>
+            a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1
+          )
+          ?.map((checker, index) => (
             <CheckerBlock
               key={checker.id}
               color={checker.color}
@@ -89,8 +90,7 @@ const Home = ({ location }) => {
               {checker.title}
             </CheckerBlock>
           ))}
-        </CheckersList>
-      )}
+      </CheckersList>
     </Layout>
   )
 }
@@ -99,10 +99,11 @@ export default Home
 
 const CheckersList = styled.div`
   height: 100%;
+  min-height: 92vh;
   display: grid;
   /* grid-template-columns: repeat(2, 1fr); */
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 15px;
+  gap: auto;
 `
 
 const CheckerBlock = styled.div`

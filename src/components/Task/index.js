@@ -6,8 +6,8 @@ import { Draggable } from "react-beautiful-dnd"
 import { useCheckers } from "../../contexts/checkerContext"
 import TextInput from "./TextInput"
 
-const Task = ({ uid, index, task = "", checked, isDraggable }) => {
-  const { setCurrentChecker } = useCheckers()
+const Task = ({ uid, index, task = "", checked }) => {
+  const { setCurrentChecker, isDraggable } = useCheckers()
 
   const handleChange = event => {
     let update
@@ -77,6 +77,7 @@ const Wrapper = styled.div`
   flex-direction: row;
   justify-content: flex-start;
   height: 3em;
+  position: relative;
 
   & [type="checkbox"]:checked ~ label.textInput {
     transition: all 245ms;
@@ -133,15 +134,13 @@ const DragBloc = styled(MdDragHandle)`
   width: 2em;
   height: 2em;
   position: absolute;
-  right: -2%;
-  transform: translateX(200%);
-  transition: transform 245ms;
-  display: none;
+  right: 0;
+  z-index: 19;
+  opacity: 0;
+  transition: opacity 400ms;
 
   &.isDraggable {
-    transform: translateX(0);
-    position: relative;
-    display: block;
+    opacity: 1;
   }
 `
 

@@ -18,8 +18,6 @@ export default Options
 const Wrapper = styled.div`
   font-size: 2em;
   line-height: 2.4em;
-  /* margin-left: 1em;
-  margin-right: 1em; */
   position: sticky;
   top: 0;
   display: flex;

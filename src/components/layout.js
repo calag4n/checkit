@@ -51,4 +51,7 @@ const Container = styled.main`
   margin: 0 auto;
   /* max-width: 960vw; */
   padding: 1.25rem 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
 `

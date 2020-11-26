@@ -34,10 +34,12 @@ const Task = ({ uid, index, task = "", checked }) => {
 
     if (isDragging) {
       document.addEventListener("mouseup", draggingEnd)
+      document.addEventListener("touchend", draggingEnd)
     }
 
     return () => {
       document.removeEventListener("mouseup", draggingEnd)
+      document.removeEventListener("touchend", draggingEnd)
     }
   }, [isDragging])
 
@@ -78,7 +80,7 @@ const Task = ({ uid, index, task = "", checked }) => {
           <DragBloc
             className={isDraggable ? "isDraggable" : ""}
             onMouseDown={handleDragging}
-            // onMouseUpCapture={() => setIsDragging(false)}
+            onTouchStart={handleDragging}
           />
         </Wrapper>
       )}

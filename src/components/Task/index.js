@@ -26,17 +26,30 @@ const Task = ({ uid, index, task = "", checked }) => {
     }
   }
 
+  const getItemStyle = (isDragging, draggableStyle) => ({
+    // change background colour if dragging
+    opacity: isDragging ? 0.5 : 1,
+
+    // styles we need to apply on draggables
+    ...draggableStyle,
+  })
+
   return (
     <Draggable
-      draggableId={`draggable-${index}`}
+      draggableId={`taskKey-${index}`}
       index={index}
       isDragDisabled={!isDraggable}
+      // key={`draggable-${index}`}
     >
-      {provided => (
+      {(provided, snapshot) => (
         <Wrapper
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
+          style={getItemStyle(
+            snapshot.isDragging,
+            provided.draggableProps.style
+          )}
         >
           <Checkbox
             type="checkbox"
@@ -53,6 +66,7 @@ const Task = ({ uid, index, task = "", checked }) => {
             value={task}
             index={index}
             onChange={e => handleChange(e)}
+            onClick={() => console.log(provided)}
           />
           <DragBloc className={isDraggable ? "isDraggable" : ""} />
         </Wrapper>
@@ -129,17 +143,19 @@ const Checkbox = styled.input`
 `
 
 const DragBloc = styled(MdDragHandle)`
-  font-size: 1.5em;
+  font-size: 0.1em;
   width: 2em;
   height: 2em;
-  position: absolute;
+  position: relative;
   right: 0;
   z-index: 19;
   opacity: 0;
   transition: opacity 400ms;
+  margin-left: 1em;
 
   &.isDraggable {
     opacity: 1;
+    font-size: 1.5em;
   }
 `
 

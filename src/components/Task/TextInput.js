@@ -52,7 +52,7 @@ const Label = styled.label`
   z-index: 20;
 
   &.isDraggable {
-    width: 85%;
+    width: 80%;
 
     & > a {
       opacity: 1;

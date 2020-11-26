@@ -37,7 +37,7 @@ const Checker = () => {
             setCurrentChecker({ action: "updateTasksOrder", value: dragInfos })
           }
         >
-          <Droppable droppableId={currentChecker?.id}>
+          <Droppable droppableId={"droppable"}>
             {provided => (
               <Ul ref={provided.innerRef} {...provided.droppableProps}>
                 {currentChecker?.tasks.map(({ task, checked }, index) => (
@@ -47,6 +47,7 @@ const Checker = () => {
                     index={index}
                     task={task}
                     checked={checked}
+                    // draggableId={`taskKey-${index}`}
                   />
                 ))}
                 {provided.placeholder}

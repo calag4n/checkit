@@ -6,11 +6,10 @@ import Title from "../components/Title"
 import google from "../images/google.svg"
 
 import { useFirebase } from "../contexts/firebaseContext"
+import SEO from "../components/seo"
 
 const IndexPage = () => {
-  const { user, firebase, login} = useFirebase()
-
-
+  const { user, firebase, login } = useFirebase()
 
   useEffect(() => {
     if (user) {
@@ -21,19 +20,16 @@ const IndexPage = () => {
       })
       navigate("/home")
     }
-
   }, [user])
 
   return (
     <Wrapper>
-        <>
-          <Title />
-          <GoogleSignIn onClick={() => login("google")}>
-            <img src={google} alt="logo google" />
-            Connexion avec Google
-          </GoogleSignIn>
-        </>
-
+      <SEO />
+      <Title />
+      <GoogleSignIn onClick={() => login("google")}>
+        <img src={google} alt="logo google" />
+        Connexion avec Google
+      </GoogleSignIn>
     </Wrapper>
   )
 }

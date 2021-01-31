@@ -7,6 +7,7 @@ import styled, { ThemeProvider } from "styled-components"
 import { theme, GlobalStyle } from "../theme"
 import Header from "./Header"
 import "./layout.css"
+import SEO from "./seo"
 
 const Layout = ({ children, page }) => {
   const data = useStaticQuery(graphql`
@@ -21,6 +22,7 @@ const Layout = ({ children, page }) => {
 
   return (
     <>
+      <SEO />
       <Header
         siteTitle={data.site.siteMetadata?.title || `Title`}
         page={page}

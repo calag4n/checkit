@@ -69,7 +69,18 @@ function SEO({ description, lang, meta, title }) {
           content: metaDescription,
         },
       ].concat(meta)}
-    />
+    >
+      {/* <!-- Global site tag (gtag.js) - Google Analytics --> */}
+      <script
+        async
+        src="https://www.googletagmanager.com/gtag/js?id=G-FLTQSQD8NZ"
+      ></script>
+      <script>
+        {`window.dataLayer = window.dataLayer || [] function gtag(){" "}
+        {dataLayer.push(arguments)}
+        gtag("js", new Date()) gtag("config", "G-FLTQSQD8NZ")`}
+      </script>
+    </Helmet>
   )
 }
 

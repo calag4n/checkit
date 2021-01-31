@@ -1,12 +1,12 @@
 const firebaseConfig = {
-  apiKey: "AIzaSyCFIuE2-ljTvqC65uwDALHibAEwXeuXuho",
-  authDomain: "checkit-1a1c5.firebaseapp.com",
-  databaseURL: "https://checkit-1a1c5.firebaseio.com",
-  projectId: "checkit-1a1c5",
-  storageBucket: "checkit-1a1c5.appspot.com",
-  messagingSenderId: "126717325093",
-  appId: "1:126717325093:web:9e5056206355dad2d9b4cc",
-  measurementId: "G-L873N9VJ9K"
+  apiKey: process.env.GATSBY_FIREBASE_API_KEY,
+  authDomain: process.env.GATSBY_FIREBASE_AUTH_DOMAIN,
+  databaseURL: process.env.GATSBY_FIREBASE_DATABASE_URL,
+  projectId: process.env.GATSBY_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.GATSBY_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.GATSBY_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.GATSBY_FIREBASE_APP_ID,
+  measurementId: process.env.GATSBY_FIREBASE_MESUREMENT_ID,
 }
 
 export default firebaseConfig

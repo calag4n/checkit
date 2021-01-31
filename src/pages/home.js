@@ -1,59 +1,18 @@
 import { navigate } from "gatsby"
 import React, { useEffect, useState } from "react"
 import styled from "styled-components"
-import {
-  addDays,
-  addMonths,
-  addWeeks,
-  startOfDay,
-  startOfMonth,
-  startOfWeek,
-  isPast,
-} from "date-fns"
 
+import { checkPeriods } from "../firebase/actions"
 import Layout from "../components/layout"
-import Checker from "../components/Checker"
-
 import { useFirebase } from "../contexts/firebaseContext"
 import { useCheckers } from "../contexts/checkerContext"
 
-const Home = ({ location }) => {
+const Home = () => {
   const { firebase, user } = useFirebase()
-  const {
-    checkers,
-    setCheckers,
-    currentChecker,
-    setCurrentChecker,
-  } = useCheckers()
-  console.log(checkers)
+  const { checkers, setCheckers, setCurrentChecker } = useCheckers()
 
   const handleSnapshot = snapshot => {
-    const checkers = snapshot.docs.map(doc => {
-      let newInit = doc.data().nextInit
-      let initTask = [...doc.data().tasks]
-
-      if (isPast(doc.data().nextInit.toDate())) {
-        if (doc.data().period === "monthly") {
-          newInit = startOfMonth(addMonths(new Date(), 1))
-        } else if (doc.data().period === "daily") {
-          newInit = startOfDay(addDays(new Date(), 1))
-        } else if (doc.data().period === "weekly") {
-          newInit = startOfWeek(addWeeks(new Date(), 1), { weekStartsOn: 1 })
-        }
-
-        initTask = doc
-          .data()
-          .tasks.map(({ task }) => ({ task, checked: false }))
-
-        firebase.db
-          .collection("checkers")
-          .doc(doc.id)
-          .update({ tasks: initTask, nextInit: newInit })
-      }
-
-      return { id: doc.id, ...doc.data(), nextInit: newInit, tasks: initTask }
-    })
-
+    const checkers = snapshot.docs.map(doc => checkPeriods(doc, firebase))
     setCheckers(checkers)
   }
 
@@ -65,7 +24,6 @@ const Home = ({ location }) => {
         firebase.db
           .collection("checkers")
           .where("user", "==", id)
-          // .orderBy('created', 'asc')
           .onSnapshot(handleSnapshot)
       }
       return getCheckers()
@@ -101,7 +59,6 @@ const CheckersList = styled.div`
   height: 100%;
   min-height: 92vh;
   display: grid;
-  /* grid-template-columns: repeat(2, 1fr); */
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: auto;
 `
